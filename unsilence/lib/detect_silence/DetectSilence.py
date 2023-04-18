@@ -53,7 +53,7 @@ def detect_silence(input_file: Path, **kwargs):
     media_duration = None
 
     for line in console_output:
-        _time = time.time()
+        _time = time()
         if "[silencedetect" in line:
             capture = re.search("\\[silencedetect @ [0-9xa-f]+] silence_([a-z]+): (-?[0-9]+.?[0-9]*[e-]*[0-9]*)",
                                 line)
