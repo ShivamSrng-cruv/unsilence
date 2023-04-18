@@ -1,5 +1,4 @@
 import re
-from time import process_time
 import subprocess
 from pathlib import Path
 
@@ -69,14 +68,13 @@ def detect_silence(input_file: Path, **kwargs):
                 if current_interval.start != time:
                     current_interval.end = time
                     intervals.add_interval(current_interval)
-                _start = process_time()
+                _start = current_interval.start
 
             if event == "end":
                 current_interval.end = time
                 intervals.add_interval(current_interval)
                 current_interval = Interval(start=time, is_silent=False)
-                _end = process_time()
-                meta_dict["silence"].append([_start, _end])
+                meta_dict["silence"].append([_start, current_interval.end])
             
         elif "Duration" in line:
             capture = re.search("Duration: ([0-9:]+.?[0-9]*)", line)
