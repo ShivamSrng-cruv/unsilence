@@ -1,4 +1,5 @@
 import re
+import json
 import subprocess
 from pathlib import Path
 
@@ -21,7 +22,10 @@ def detect_silence(input_file: Path, **kwargs):
             (called like: func(current, total))
     """
     input_file = Path(input_file).absolute()
-
+    meta_dict = {
+        'silence': [],
+        'unsilence': []
+    }
     if not input_file.exists():
         raise FileNotFoundError(f"Input file {input_file} does not exist!")
 
@@ -66,11 +70,13 @@ def detect_silence(input_file: Path, **kwargs):
                     current_interval.end = time
                     intervals.add_interval(current_interval)
                 current_interval = Interval(start=time, is_silent=True)
+                meta_dict["silence"].append(current_interval)
 
             if event == "end":
                 current_interval.end = time
                 intervals.add_interval(current_interval)
                 current_interval = Interval(start=time, is_silent=False)
+                meta_dict["unsilence"].append(current_interval)
 
         elif "Duration" in line:
             capture = re.search("Duration: ([0-9:]+.?[0-9]*)", line)
@@ -90,5 +96,6 @@ def detect_silence(input_file: Path, **kwargs):
         kwargs.get('short_interval_threshold', 0.3),
         kwargs.get('stretch_time', 0.25)
     )
-
+    with open("./timestamps.json", "w") as fp:
+        json.dump(meta_dict, fp, indent=4) 
     return intervals
