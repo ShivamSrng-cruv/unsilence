@@ -74,7 +74,6 @@ def detect_silence(input_file: Path, **kwargs):
             if event == "end":
                 current_interval.end = time
                 intervals.add_interval(current_interval)
-                silence_meta_data["silence"].append([current_interval.start, current_interval.end])
                 current_interval = Interval(start=time, is_silent=False)
 
         elif "Duration" in line:
