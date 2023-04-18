@@ -94,5 +94,5 @@ def detect_silence(input_file: Path, **kwargs):
         kwargs.get('short_interval_threshold', 0.3),
         kwargs.get('stretch_time', 0.25)
     )
-
+    print(silence_meta_data)
     return intervals
