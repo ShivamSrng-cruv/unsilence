@@ -47,6 +47,8 @@ class Unsilence:
         :rtype: ~unsilence.lib.intervals.Intervals.Intervals
         """
         self.__intervals = detect_silence(self.__input_file, **kwargs)
+        for _time in self.__intervals.intervals:
+            print(_time)
         return self.__intervals
 
     def set_intervals(self, intervals: Intervals):
