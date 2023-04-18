@@ -96,6 +96,5 @@ def detect_silence(input_file: Path, **kwargs):
         kwargs.get('short_interval_threshold', 0.3),
         kwargs.get('stretch_time', 0.25)
     )
-    with open("./timestamps.json", "w") as fp:
-        json.dump(meta_dict, fp, indent=4) 
+    print(meta_dict)
     return intervals
