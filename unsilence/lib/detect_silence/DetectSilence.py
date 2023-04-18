@@ -69,11 +69,27 @@ def detect_silence(input_file: Path, **kwargs):
                     current_interval.end = time
                     intervals.add_interval(current_interval)
                 current_interval = Interval(start=time, is_silent=True)
+                hour, minute, second_millisecond = capture[1].split(":")
+                second, millisecond = second_millisecond.split(".")
+                meta_dict["silence"].append({
+                    'hour': hour,
+                    'minute': minute,
+                    'sec': second,
+                    'millisec': millisecond
+                })
 
             if event == "end":
                 current_interval.end = time
                 intervals.add_interval(current_interval)
                 current_interval = Interval(start=time, is_silent=False)
+                hour, minute, second_millisecond = capture[1].split(":")
+                second, millisecond = second_millisecond.split(".")
+                meta_dict["silence"].append({
+                    'hour': hour,
+                    'minute': minute,
+                    'sec': second,
+                    'millisec': millisecond
+                })
             
         elif "Duration" in line:
             capture = re.search("Duration: ([0-9:]+.?[0-9]*)", line)
@@ -81,12 +97,6 @@ def detect_silence(input_file: Path, **kwargs):
                 continue
             hour, minute, second_millisecond = capture[1].split(":")
             second, millisecond = second_millisecond.split(".")
-            meta_dict["silence"].append({
-                'hour': hour,
-                'minute': minute,
-                'sec': second,
-                'millisec': millisecond
-            })
             media_duration = float(str(int(second) + 60 * (int(minute) + 60 * int(hour))) + "." + millisecond)
 
     current_interval.end = media_duration
