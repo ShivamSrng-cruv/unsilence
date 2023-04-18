@@ -1,5 +1,5 @@
 import re
-from time import time as get_time
+from time import process_time
 import subprocess
 from pathlib import Path
 
@@ -53,7 +53,6 @@ def detect_silence(input_file: Path, **kwargs):
     media_duration = None
 
     for line in console_output:
-        _time = get_time()
         if "[silencedetect" in line:
             capture = re.search("\\[silencedetect @ [0-9xa-f]+] silence_([a-z]+): (-?[0-9]+.?[0-9]*[e-]*[0-9]*)",
                                 line)
@@ -70,13 +69,13 @@ def detect_silence(input_file: Path, **kwargs):
                 if current_interval.start != time:
                     current_interval.end = time
                     intervals.add_interval(current_interval)
-                _start = get_time()
+                _start = process_time()
 
             if event == "end":
                 current_interval.end = time
                 intervals.add_interval(current_interval)
                 current_interval = Interval(start=time, is_silent=False)
-                _end = get_time()
+                _end = process_time()
                 meta_dict["silence"].append([_start, _end])
             
         elif "Duration" in line:
