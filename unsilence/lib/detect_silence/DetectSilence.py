@@ -1,5 +1,5 @@
 import re
-import time
+from time import time
 import subprocess
 from pathlib import Path
 
