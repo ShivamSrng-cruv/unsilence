@@ -21,6 +21,9 @@ def detect_silence(input_file: Path, **kwargs):
             (called like: func(current, total))
     """
     input_file = Path(input_file).absolute()
+    silence_meta_data = {
+        "silence": []
+        }
 
     if not input_file.exists():
         raise FileNotFoundError(f"Input file {input_file} does not exist!")
@@ -65,6 +68,7 @@ def detect_silence(input_file: Path, **kwargs):
                 if current_interval.start != time:
                     current_interval.end = time
                     intervals.add_interval(current_interval)
+                    silence_meta_data["silence"].append([current_interval.start, current_interval.end])
                 current_interval = Interval(start=time, is_silent=True)
 
             if event == "end":
