@@ -70,13 +70,13 @@ def detect_silence(input_file: Path, **kwargs):
                     current_interval.end = time
                     intervals.add_interval(current_interval)
                 current_interval = Interval(start=time, is_silent=True)
-                meta_dict["silence"].append(current_interval)
+                meta_dict["silence"].append([current_interval.start, current_interval.end])
 
             if event == "end":
                 current_interval.end = time
                 intervals.add_interval(current_interval)
                 current_interval = Interval(start=time, is_silent=False)
-                meta_dict["unsilence"].append(current_interval)
+                meta_dict["unsilence"].append([current_interval.start, current_interval.end])
 
         elif "Duration" in line:
             capture = re.search("Duration: ([0-9:]+.?[0-9]*)", line)
